@@ -14,6 +14,7 @@ int totalPoints;
 int step;
 int timing; //every n frames
 Snake s;
+PVector up, down, left, right;
 
 void setup() {
   size(950, 650);
@@ -22,6 +23,10 @@ void setup() {
   s = new Snake();
   timing = 20;
   printCoords();
+  up = new PVector(0,-step);
+  down = new PVector(0,step);
+  left = new PVector(-step,0);
+  right = new PVector(step,0);
 }
 
 void draw() {
@@ -31,7 +36,31 @@ void draw() {
     //printCoords();
   }
   s.show();
-  
+}
+
+void keyPressed(){
+  if(key == CODED){
+    switch(keyCode){
+      case UP:
+        s.turn(up);
+        //println("Turning up");
+        break;
+      case DOWN:
+        s.turn(down);
+        //println("Turning down");
+        break;
+      case LEFT:
+        s.turn(left);
+        //println("Turning left");
+        break;
+      case RIGHT:
+        s.turn(right);
+        //println("Turning right");
+        break;
+      default:
+        break;
+    }
+  }
 }
 
 void printCoords(){

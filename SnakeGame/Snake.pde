@@ -27,6 +27,10 @@ class Snake {
   
   }
   
+  void turn(PVector dir){
+    heading.set(dir);
+  }
+  
   void show(){
     for (PVector loc : body){
       rect(loc.x, loc.y, step, step);
