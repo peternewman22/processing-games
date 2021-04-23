@@ -24,7 +24,9 @@ class Snake {
     
     // add heading to the head of the snake
     body.get(0).add(heading);
-    eatFruit();
+    hasTurned = true; //has actually implemented the turn
+    eatFruit(f);
+    eatBonusFruit(bf);
     wrap(); // if it reaches the boundary, wrap
     
     
@@ -45,12 +47,23 @@ class Snake {
     }
   }
   
-  void eatFruit(){
+  void eatFruit(Fruit f_){
     // compare the fruit location with the head of the snake
-    if(body.get(0).equals(f.loc)){
+    if(body.get(0).equals(f_.loc)){
       playerScore += standardPoints; //get points
-      PVector newSegment = f.loc.copy(); // note the location
-      f.generateFruit();
+      PVector newSegment = f_.loc.copy(); // note the location
+      f_.generateFruit();
+      body.add(newSegment);
+      
+    }
+  }
+  
+   void eatBonusFruit(BonusFruit bf_){
+    // compare the fruit location with the head of the snake
+    if(body.get(0).equals(bf_.loc) && bf_.active){
+      playerScore += bonusPoints; //get points
+      PVector newSegment = bf_.loc.copy(); // note the location
+      bf_.generateFruit();
       body.add(newSegment);
       
     }

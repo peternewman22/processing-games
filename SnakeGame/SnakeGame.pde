@@ -19,7 +19,9 @@ int timing; //every n frames
 Snake s;
 PVector up, down, left, right;
 Fruit f;
+BonusFruit bf;
 int standardPoints, bonusPoints;
+boolean hasTurned;
 
 void setup() {
   size(950, 650);
@@ -32,8 +34,10 @@ void setup() {
   s = new Snake();
   timing = 10;
   printCoords();
-  
+  hasTurned = false;
+
   f = new Fruit();
+  bf = new BonusFruit();
   standardPoints = 10;
   bonusPoints = 50;
 }
@@ -46,39 +50,46 @@ void draw() {
   }
   s.show();
   f.show();
+  bf.checkIsActive();
+  bf.show();
   showOverlay();
 }
 
 void keyPressed() {
-  if (key == CODED) {
-    switch(keyCode) {
-    case UP:
-      if (!s.heading.equals(down)) {
-        s.turn(up);
-      };
-      //println("Turning up");
-      break;
-    case DOWN:
-      if (!s.heading.equals(up)) {
-        s.turn(down);
-      };
-      //println("Turning down");
-      break;
-    case LEFT:
-      if (!s.heading.equals(right)) {
-        s.turn(left);
-      };
-      //println("Turning left");
-      break;
-    case RIGHT:
-      if (!s.heading.equals(left)) {
-        s.turn(right);
-      };
-      //println("Turning right");
-      break;
-    default:
-      break;
+  // you can change directions faster than the snake updates
+  // a workaround is using a flag to register if the move has been implemented
+  if (hasTurned) {
+    if (key == CODED) {
+      switch(keyCode) {
+      case UP:
+        if (!s.heading.equals(down)) {
+          s.turn(up);
+        };
+        //println("Turning up");
+        break;
+      case DOWN:
+        if (!s.heading.equals(up)) {
+          s.turn(down);
+        };
+        //println("Turning down");
+        break;
+      case LEFT:
+        if (!s.heading.equals(right)) {
+          s.turn(left);
+        };
+        //println("Turning left");
+        break;
+      case RIGHT:
+        if (!s.heading.equals(left)) {
+          s.turn(right);
+        };
+        //println("Turning right");
+        break;
+      default:
+        break;
+      }
     }
+    hasTurned = false;
   }
 }
 
@@ -89,12 +100,13 @@ void showScore() {
 }
 
 void showOverlay() {
-  stroke(255,100);
-  fill(255,100);
+  stroke(255, 100);
+  fill(255, 100);
   showScore();
   textAlign(CENTER);
-  text("Head coordinates: ("+str(s.body.get(0).x) + ", " + str(s.body.get(0).y) + ")", width/2, height*0.9);
-  text("Fruit coordinates: (" +str(f.loc.x) + ", " + str(f.loc.y) + ")", width/2, height*0.95);
+  text("Head coordinates: ("+str(s.body.get(0).x) + ", " + str(s.body.get(0).y) + ")", width/2, height*0.85);
+  text("Fruit coordinates: (" +str(f.loc.x) + ", " + str(f.loc.y) + ")", width/2, height*0.9);
+  text("Bonus Fruit coordinates: (" +str(bf.loc.x) + ", " + str(bf.loc.y) + "). Life: " + str(bf.life), width/2, height*0.95);
 }
 
 
