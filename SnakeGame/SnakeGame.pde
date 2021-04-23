@@ -65,13 +65,13 @@ void keyPressed() {
       //println("Turning down");
       break;
     case LEFT:
-      if (!s.heading.equals(left)) {
+      if (!s.heading.equals(right)) {
         s.turn(left);
       };
       //println("Turning left");
       break;
     case RIGHT:
-      if (!s.heading.equals(right)) {
+      if (!s.heading.equals(left)) {
         s.turn(right);
       };
       //println("Turning right");
@@ -84,13 +84,13 @@ void keyPressed() {
 
 void showScore() {
   textAlign(LEFT);
-  stroke(255);
-  fill(255);
   textSize(20);
   text("Score: " + str(playerScore), 20, 20);
 }
 
 void showOverlay() {
+  stroke(255,100);
+  fill(255,100);
   showScore();
   textAlign(CENTER);
   text("Head coordinates: ("+str(s.body.get(0).x) + ", " + str(s.body.get(0).y) + ")", width/2, height*0.9);
