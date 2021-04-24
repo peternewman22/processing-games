@@ -3,23 +3,17 @@ class BonusFruit extends Fruit {
   // one its lifespan gets down to 20%, it should start to flash
   int life;
   float a;
+  boolean expired;
   
 
   BonusFruit() {
     super(); //inherit fruit things
-    life = 20*60;
+    life = 1000;
+    points = 50;
     a = PI/2; //this way the flashing starts at on
     active = false;
+    expired = false;
     name = "Bonus Fruit";
-  }
-  
-  void checkIsActive(){
-    if(!active){
-      if(random(100) < 0.1){ // 5% chance that a bonus fruit randomly appears
-        generateFruit(); // re-init
-        active = true;
-      }
-    }
   }
 
   void show() {
@@ -43,6 +37,7 @@ class BonusFruit extends Fruit {
   void checkExpiry(){
     if(life <= 0){
       active = false;
+      expired = true;
     }
   }
 

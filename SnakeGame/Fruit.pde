@@ -2,9 +2,11 @@ class Fruit {
   PVector loc;
   String name;
   boolean active;
+  int points;
 
   Fruit() {
     loc = new PVector(0,0);
+    points = 10;
     active = true;
     name = "Fruit";
     generateFruit();

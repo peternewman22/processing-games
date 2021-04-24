@@ -22,6 +22,8 @@ Fruit f;
 BonusFruit bf;
 int standardPoints, bonusPoints;
 boolean hasTurned;
+boolean gameOver;
+int gameOverFrame;
 
 void setup() {
   size(950, 650);
@@ -32,27 +34,51 @@ void setup() {
   left = new PVector(-step, 0);
   right = new PVector(step, 0);
   s = new Snake();
+  gameOver = false;
+  gameOverFrame = 0;
   timing = 10;
   printCoords();
   hasTurned = false;
 
   f = new Fruit();
   bf = new BonusFruit();
-  standardPoints = 10;
-  bonusPoints = 50;
 }
 
 void draw() {
   background(0);
+  if(!gameOver){
   if (frameCount % timing == 0 ) {
     s.update();
+    resurrectBonus();
     //printCoords();
   }
-  s.show();
+  s.show(color(255));
   f.show();
-  bf.checkIsActive();
   bf.show();
   showOverlay();
+  } else {
+    gameOverSequence();
+  }
+}
+
+void gameOverSequence(){
+  // the snake should flash
+  float a = 0;
+  float alpha = map(cos(a), -1, 1, 0, 255);
+  s.show(color(255,alpha));
+  if(frameCount - gameOverFrame > 60*3){
+    noLoop();
+  }
+  
+}
+
+void resurrectBonus() {
+  if (bf.expired) { // immediately generate a new bf but don't immediately activate it
+    bf = new BonusFruit();
+  }
+  if (!bf.active && random(100) < 1) { //1% chance
+    bf.active = true;
+  }
 }
 
 void keyPressed() {
