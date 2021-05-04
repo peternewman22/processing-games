@@ -11,7 +11,7 @@ class Snake {
   void initSnake() {
     // makes 5 segments, starting from the middle of the screen and heading right
     for (int i = 0; i < 5; i++) {
-      body.add(new PVector(width/2 - 5 + i*step, height/2 - 5));
+      body.add(new PVector(i*step + 10*step, 10*step));
     }
   }
 
@@ -34,7 +34,6 @@ class Snake {
     for (int i = 1; i < body.size(); i++){
       if(head.equals(body.get(i))){
         gameOver = true;
-        gameOverFrame = frameCount;
         return;
       }
     }
@@ -58,15 +57,17 @@ class Snake {
     // compare the fruit location with the head of the snake
     if (body.get(0).equals(f.loc)) {
       playerScore += f.points;
+      fruitCollected += 1;
       ; //get points
-      newSegment = f.loc.copy(); // note the location
+      newSegment = new PVector(-step, -step);
       f = new Fruit();
       body.add(newSegment);
+      incrementLevel(); // only eating fruit increments level
     } 
     // compare the bonus fruit location with the head of the snake
     if (body.get(0).equals(bf.loc) && bf.active) {
       playerScore += bf.points;
-      newSegment = bf.loc.copy();
+      newSegment = new PVector(-step, -step);
       bf = new BonusFruit();
       body.add(newSegment);
     }

@@ -21,7 +21,7 @@ class Fruit {
 
   void generateFruit() {
     // making sure it sits on some multiple of 10
-    loc.set(new PVector(int(random(width/step))*step,int(random(height/step))*step));
+    loc.set(new PVector(step*int(random(width/step)),step*int(random(height/step))));
     println(name +" is located at (" + str(loc.x) + ", " + str(loc.y) + ")");
   }
 

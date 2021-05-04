@@ -16,6 +16,7 @@ Keep track of snake through an arraylist of points
 int playerScore;
 int step;
 int timing; //every n frames
+int fruitCollected;
 Snake s;
 PVector up, down, left, right;
 Fruit f;
@@ -23,22 +24,26 @@ BonusFruit bf;
 int standardPoints, bonusPoints;
 boolean hasTurned;
 boolean gameOver;
-int gameOverFrame;
+float gameOverCounter;
+
 
 void setup() {
-  size(950, 650);
-  step = 10;
+  size(940, 640);
+  step = 20;
   rectMode(CENTER);
+  //blendMode(MULTIPLY);
+  ellipseMode(RADIUS);
   up = new PVector(0, -step);
   down = new PVector(0, step);
   left = new PVector(-step, 0);
   right = new PVector(step, 0);
   s = new Snake();
   gameOver = false;
-  gameOverFrame = 0;
-  timing = 10;
+  gameOverCounter = 0;
+  timing = 5;
   printCoords();
   hasTurned = false;
+  fruitCollected = 0;
 
   f = new Fruit();
   bf = new BonusFruit();
@@ -46,30 +51,45 @@ void setup() {
 
 void draw() {
   background(0);
-  if(!gameOver){
-  if (frameCount % timing == 0 ) {
-    s.update();
-    resurrectBonus();
-    //printCoords();
-  }
-  s.show(color(255));
-  f.show();
-  bf.show();
-  showOverlay();
+  if (!gameOver) {
+    if (frameCount % timing == 0 ) {
+      s.update();
+      resurrectBonus();
+      //printCoords();
+    }
+    s.show(color(255));
+    f.show();
+    bf.show();
+    showOverlay();
   } else {
     gameOverSequence();
   }
 }
 
-void gameOverSequence(){
+void incrementLevel(){
+  if(fruitCollected % 10 == 0 && timing > 1){
+    timing -= 1;
+  }
+}
+
+void gameOverSequence() {
   // the snake should flash
-  float a = 0;
-  float alpha = map(cos(a), -1, 1, 0, 255);
-  s.show(color(255,alpha));
-  if(frameCount - gameOverFrame > 60*3){
+  //text("GameOverCounter " + str(gameOverCounter), width/2, 20);
+  if (gameOverCounter < 6*PI) {
+    float alpha = map(cos(gameOverCounter), -1, 1, 0, 255);
+    s.show(color(255, alpha));
+    gameOverCounter += 0.1;
+  } else {
+    println("End game");
+    fill(255);
+    textSize(50);
+    textAlign(CENTER);
+    text("GAME OVER", width/2, height/2);
+    textSize(20);
+    textAlign(CENTER);
+    text("Final Score: " + str(playerScore), width/2, height/2 + 50);
     noLoop();
   }
-  
 }
 
 void resurrectBonus() {
