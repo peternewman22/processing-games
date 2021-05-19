@@ -1,10 +1,11 @@
-class Enemy extends Player{
-  
-  Enemy(){
+class Enemy extends Player {
+  int row;
+  Enemy(int row_, float x_, float y_) {
     super();
-    x = width/2;
+    row = row_;
+    x = x_;
     size = 50;
-    y = 0;
+    y = y_;
     coolDown = 0;
     coolDownRate = 15;
     bulletRate = 2;

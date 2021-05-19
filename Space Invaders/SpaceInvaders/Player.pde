@@ -6,6 +6,7 @@ class Player {
   int coolDown;
   int coolDownRate;
   int bulletRate;
+  boolean amDead;
 
   Player() {
     x = width/2;
@@ -14,6 +15,7 @@ class Player {
     coolDown = 0;
     coolDownRate = 15;
     bulletRate = 2;
+    amDead = false;
   }
 
   void show() {
