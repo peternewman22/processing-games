@@ -5,7 +5,7 @@ float res;
 float ps = 0.9;
 Square[][] gameBoard;
 boolean[][] validMoves;
-boolean player1Turn = true;
+int turnState = 1;
 
 void setup() {
   size(800, 800);
@@ -53,20 +53,32 @@ void initBoard() {
 void evalMoves() {
   /*
   What constitutes a valid move in Reversi and how do you detect it?
-  A valid move must bookend at least one opposing piece
+   A valid move must bookend at least one opposing piece
    - so we have to know whose move it is
    - look around each square and if the adjacent square is:
-     - blank: do nothing
-     - isFriend: do nothing
-     - isEnemy: keep searching in that direction (hold off on evaluating)
-       - if isFriend, stop the search and change all in between to isFriend
+   - blank: do nothing
+   - isFriend: do nothing
+   - isEnemy: keep searching in that direction (hold off on evaluating)
+   - if isFriend, stop the search and change all in between to isFriend
    */
-  for(int col = 0; col < s; col ++){
-    for(int row = 0; row < s; row ++){
-      //search(col, row);
+  for (int col = 0; col < s; col++) {
+    for (int row = 0; row < s; row++) {
+      // if the square is the active player's
+      if(gameBoard[col][row].state == turnState){
+        for(int i = -1; i < 2; i+=2){
+          for(int j = -1; j < 2; j+=2){
+            //if valid
+            if(col + i > 0 && col + i < s && row + j > 0 && row + j < s){
+              // if we find an enemy
+              if(gameBoard[col+i][row+j].state 
+            }
+          }
+        }
+      }
     }
   }
 }
+
 
 
 void drawBoard() {
