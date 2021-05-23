@@ -70,7 +70,19 @@ void evalMoves() {
             //if valid
             if(col + i > 0 && col + i < s && row + j > 0 && row + j < s){
               // if we find an enemy
-              if(gameBoard[col+i][row+j].state 
+              if(gameBoard[col+i][row+j].state != turnState){
+                // continue checking on this trajectory until we either hit an edge OR hit a friend
+                int checkStep = 2;
+                while(col + checkStep*i > 0 && col + checkStep*i < s && row + checkStep * j > 0 && row + checkStep < s){
+                  if(gameBoard[col+checkStep*i][row+checkStep*j].state == 0){
+                    validMoves[col][row] = false;
+                    break;
+                  } else if(gameBoard[col+checkStep*i][row+checkStep*j].state == turnState){
+                    validMoves[col][row] = true;
+                    break;
+                  }
+                }
+                validMoves[col][row] = false;
             }
           }
         }
