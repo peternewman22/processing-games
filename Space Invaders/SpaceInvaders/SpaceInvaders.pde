@@ -17,41 +17,53 @@ void setup() {
 }
 
 void initEnemies() {
-  int currentX = 0;
+  int currentX = gap;
   int currentCol = 0;
   for (int e = 0; e < numEnemies; e++) {
-    
     int row = int(e/numCol);
-   
-      println("row:" + row + " currnetCol:"+currentCol + " currentX:"+currentX + "row*size:"+row*size);
+    //println("row:" + row + " currnetCol:"+currentCol + " currentX:"+currentX + "row*size:"+row*size);
     enemies[e] = new Enemy(row, currentX, row*(size+gap));
-    
     currentCol += 1;
     if(currentCol >= numCol){
       currentCol = 0;
     }
-    
-      currentX = gap+(size+gap)*currentCol;
-    
+    currentX = gap+(size+gap)*currentCol;
   }
 }
 
 void draw() {
   background(0);
   p.show();
-  if (frameCount%p.coolDownRate == 0) {
+  if (frameCount % p.coolDownRate == 0) {
     p.chargeWeapon();
   }
-  // drawing bullets
-  for (Bullet b : bullets) {
-    b.update();
-    b.show();
-  }
+
 
   //drawing enemies
   for (Enemy e : enemies) {
     e.show();
+      // drawing bullets
   }
+  for (Bullet b : bullets) {
+      b.update();
+      for (Enemy e : enemies) {
+        if(!e.iAmDead){
+        if(e.iAmHit(b.pos.x, b.pos.y)){
+        e.explode();
+        b.iAmDead = true;
+      }
+        }
+            
+      }
+
+     b.show();
+  }
+  for (int i = bullets.size() - 1; i >= 0; i--) {
+  Bullet b = bullets.get(i);
+  if (b.iAmDead) {
+    bullets.remove(i);
+  }
+}
 }
 
 void keyPressed() {
@@ -64,7 +76,7 @@ void keyPressed() {
     break;
   case ' ':
     if (p.coolDown == 0) {
-      bullets.add(new Bullet(p.x, height-p.size, -p.bulletRate));
+      bullets.add(new Bullet(p.pos.x, height - p.size, -p.bulletRate));
       p.coolDown = 10;
     }
     break;

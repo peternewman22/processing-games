@@ -3,9 +3,9 @@ class Enemy extends Player {
   Enemy(int row_, float x_, float y_) {
     super();
     row = row_;
-    x = x_;
+    pos.x = x_;
     size = 50;
-    y = y_;
+    pos.y = y_;
     coolDown = 0;
     coolDownRate = 15;
     bulletRate = 2;
