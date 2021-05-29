@@ -4,10 +4,20 @@ class Enemy extends Player {
     super();
     row = row_;
     pos.x = x_;
-    size = 50;
+    size = shipSize;
     pos.y = y_;
     coolDown = 0;
     coolDownRate = 15;
     bulletRate = 2;
+  }
+  
+   void show() {
+    if(!iAmDead){
+       rectMode(CENTER);
+      fill(255);
+      noStroke();
+      rect(pos.x, pos.y, size, size);
+    }
+
   }
 }

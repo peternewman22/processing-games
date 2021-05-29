@@ -7,13 +7,13 @@ class Player {
   int coolDownRate;
   int bulletRate;
   boolean iAmDead;
-  
+
   PVector pos;
   PVector vel;
 
   Player() {
-    
-    pos = new PVector(size/2,height - size);
+
+    pos = new PVector(size/2, height - size);
     //vel = new PVector(0, vely);
     pos.x = width/2;
     size = 50;
@@ -25,13 +25,12 @@ class Player {
   }
 
   void show() {
-    if(!iAmDead){
-       rectMode(CENTER);
+    if (!iAmDead) {
+      rectMode(CENTER);
       fill(255);
       noStroke();
       rect(pos.x, pos.y, size, size);
       fill(0);
-      ellipse(pos.x, pos.y, 10, 10);
       // draw in coolDown level
       textAlign(LEFT);
       textSize(20);
@@ -39,10 +38,9 @@ class Player {
       fill(255);
       text(str(coolDown), 20, height-20);
     }
-
   }
-  
-  
+
+
 
   void update(float vel) {
     // change x pos
@@ -52,30 +50,32 @@ class Player {
     } else if (pos.x + size/2 > width) {
       pos.x = width - size/2;
     }
-
-    
   }
-  
+
   boolean iAmHit(float x_, float y_) {
-    if(x_ >= pos.x - size/2 && x_ <= pos.x + size/2 && y_ >= pos.y - size/2 && y_ <= pos.y + size/2 ){
+    if (x_ >= pos.x - size/2 && x_ <= pos.x + size/2 && y_ >= pos.y - size/2 && y_ <= pos.y + size/2 ) {
+      print("Hit detected!");
       return true;
     }
     return false;
-    // could be refactored to return A && B && C && D ? 
+    // could be refactored to return A && B && C && D ?
   }
-  
-  void explode(){
+
+  void explode() {
+    println("Showing explosion...");
     iAmDead = true;
-    pushMatrix();
-    translate(pos.x, pos.y);
-    for(int i = 0; i < 12; i++){
-      rotate(PI/6);
-      line(20,0,100,0);
-    }
-    popMatrix();
+    stroke(255,0,0);
+    strokeWeight(5);
+    push();
+      translate(pos.x, pos.y);
+      for (int i = 0; i < 12; i++) {
+        rotate(PI/6);
+        line(20, 0, 100, 0);
+      }
+    pop();
   }
-  
-  void chargeWeapon(){
+
+  void chargeWeapon() {
     // reduce coolDown
     if (coolDown > 0) {
       coolDown -= 1;
