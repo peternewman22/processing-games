@@ -4,7 +4,7 @@ class Explosion {
   float plumeLengthMax = 80;
   float fade = 255;
   int fadeLength = 10;
-  int animationFrames = 4;
+  int animationFrames = 3;
   PVector pos;
   boolean isFinished = false;
   
