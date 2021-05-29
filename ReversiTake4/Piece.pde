@@ -44,7 +44,7 @@ class Piece {
     }
   }
 
-  boolean isClicked(int col_, int row_) {
+  boolean doesMatch(int col_, int row_) {
     if (col == col_ && row == row_) {
       println("Piece matched at (" + str(col) + ", " + str(row) + ")");
       return true;

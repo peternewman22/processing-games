@@ -10,12 +10,17 @@ How does Reversi work?
  */
 
 ArrayList<Piece> pieces;
+
 int squareCount = 8;
 int activeCol, activeRow;
 PVector centre;
 float res = 100;
+float diagDist = PVector.dist(new PVector(0,0), new PVector(res, res)); // so it calculates the same
 int activePlayer = 1;
 boolean isValidMove = false;
+boolean isBlank = false;
+boolean isEnemyAdjacent = false;
+boolean doesBookend = true;
 
 void setup() {
   size(800, 800);
@@ -42,7 +47,45 @@ void locateMouse() {
   centre.set((activeCol+0.5)*res, (activeRow + 0.5)*res);
 }
 
+void hover() {
+  // detect where the mouse is
+  if (isBlank) {
+    fill(0, 0, 255, 200);
+    rect(activeCol*res, activeRow*res, res, res);
+  } else {
+    fill(255, 200);
+    rect(activeCol*res, activeRow*res, res, res);
+  }
+}
+
 void evalMove() {
+  isBlank = true;
+  
+  // a move is valid if the square is unoccupied
+  for(Piece p: pieces){
+   if(p.doesMatch(activeCol, activeRow)){
+     isBlank = false;
+     return; // no need to check further
+   }
+  }
+  
+  // a move is valid if it's next to an enemy piece
+  for(Piece p: pieces){
+    // if an enemy
+    if(p.player != activePlayer){
+      // pieces should either be res away or sqrt(2)*res away
+      float d = PVector.dist(centre, p.pos);
+      if(d == res || d == diagDist){
+        isEnemyAdjacent = true;
+      }
+    }
+  }
+  
+  // checking for Bookending = points that s
+  
+   
+  // if there are no matches, i.e. we're on a blank square, then see if 
+  isValidMove = isBlank && isEnemyAdjacent && doesBookend;
 }
 
 void drawPieces() {
@@ -79,24 +122,13 @@ void drawOverlay() {
   }
 }
 
-void hover() {
-  // detect where the mouse is
-  if (isValidMove) {
-  } else {
-    fill(255, 200);
-    rect(activeCol*res, activeRow*res, res, res);
-  }
-}
+
 
 void mousePressed() {
   if (mouseButton == LEFT) {
-    // locate the mouse in terms of columns and rows
-    int col = int(mouseX/res);
-    int row = int(mouseY/res);
-
     for (Piece p : pieces) {
       if (p.player == activePlayer) {
-        if (p.isClicked(activeCol, activeRow)) {
+        if (p.doesMatch(activeCol, activeRow)) {
           p.animating = true;
         }
       }
