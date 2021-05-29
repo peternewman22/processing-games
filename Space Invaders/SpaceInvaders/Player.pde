@@ -30,12 +30,14 @@ class Player {
       fill(255);
       noStroke();
       rect(pos.x, pos.y, size, size);
-    
+      fill(0);
+      ellipse(pos.x, pos.y, 10, 10);
       // draw in coolDown level
       textAlign(LEFT);
       textSize(20);
       stroke(255);
-      text(str(coolDown), 10, 20);
+      fill(255);
+      text(str(coolDown), 20, height-20);
     }
 
   }
@@ -59,17 +61,18 @@ class Player {
       return true;
     }
     return false;
+    // could be refactored to return A && B && C && D ? 
   }
   
   void explode(){
     iAmDead = true;
-    push();
+    pushMatrix();
     translate(pos.x, pos.y);
     for(int i = 0; i < 12; i++){
       rotate(PI/6);
-        line(20,0,100,0);
+      line(20,0,100,0);
     }
-    pop();
+    popMatrix();
   }
   
   void chargeWeapon(){
