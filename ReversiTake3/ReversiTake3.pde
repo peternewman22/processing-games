@@ -64,51 +64,60 @@ void evalMoves() {
   for (int col = 0; col < s; col++) {
     for (int row = 0; row < s; row++) {
       // if the square is the active player's
-      if(gameBoard[col][row].state == turnState){
-        for(int i = -1; i < 2; i+=2){
-          for(int j = -1; j < 2; j+=2){
+      if (gameBoard[col][row].state == turnState) {
+        ArrayList<GVector> toChange = new ArrayList<GVector>();
+        for (int i = -1; i < 2; i+=2) {
+          for (int j = -1; j < 2; j+=2) {
             //if valid
-            if(col + i > 0 && col + i < s && row + j > 0 && row + j < s){
+            if (col + i > 0 && col + i < s && row + j > 0 && row + j < s) {
               // if we find an enemy
-              if(gameBoard[col+i][row+j].state != turnState){
+              if (gameBoard[col+i][row+j].state != turnState) {
                 // continue checking on this trajectory until we either hit an edge OR hit a friend
                 int checkStep = 2;
-                while(col + checkStep*i > 0 && col + checkStep*i < s && row + checkStep * j > 0 && row + checkStep < s){
-                  if(gameBoard[col+checkStep*i][row+checkStep*j].state == 0){
+                boolean reachedEdge = false;
+                toChange.add(new GVector(col+i,row+j));
+                
+                while (!reachedEdge) {
+                  // if valid coords
+                  if (col + checkStep*i > 0 && col + checkStep*i < s && row + checkStep * j > 0 && row + checkStep < s) {
+                    // keep track of 
+                    // if reached a neutral tile, no good
+                    if (gameBoard[col+checkStep*i][row+checkStep*j].state == 0) {
+                      validMoves[col][row] = false;
+                      break;
+                    } else if (gameBoard[col+checkStep*i][row+checkStep*j].state == turnState) {
+                      validMoves[col][row] = true;
+                      break;
+                    }
+                  } else { //if not valid coords, must have reached the edge = not a valid move
                     validMoves[col][row] = false;
-                    break;
-                  } else if(gameBoard[col+checkStep*i][row+checkStep*j].state == turnState){
-                    validMoves[col][row] = true;
-                    break;
+                    reachedEdge = true;
                   }
                 }
-                validMoves[col][row] = false;
+              }
             }
           }
         }
       }
-    }
-  }
-}
 
 
 
-void drawBoard() {
-  // draw the board
-  fill(255, 200);
-  stroke(0);
-  strokeWeight(5);
-  for (int col = 0; col < s; col ++) {
-    for (int row = 0; row < s; row++) {
-      rect(col*res, row*res, res, res);
-    }
-  }
-}
+      void drawBoard() {
+        // draw the board
+        fill(255, 200);
+        stroke(0);
+        strokeWeight(5);
+        for (int col = 0; col < s; col ++) {
+          for (int row = 0; row < s; row++) {
+            rect(col*res, row*res, res, res);
+          }
+        }
+      }
 
-void drawPieces() {
-  for (int col = 0; col < s; col ++) {
-    for (int row = 0; row < s; row++) {
-      gameBoard[col][row].show();
-    }
-  }
-}
+      void drawPieces() {
+        for (int col = 0; col < s; col ++) {
+          for (int row = 0; row < s; row++) {
+            gameBoard[col][row].show();
+          }
+        }
+      }
