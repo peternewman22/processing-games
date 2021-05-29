@@ -10,13 +10,17 @@ How does Reversi work?
  */
 
 ArrayList<Piece> player1, player2;
+ArrayList<Piece> pieces;
 int squareCount = 8;
 float res = 100;
+boolean isPlayer1Turn = true;
+int activePlayer = 1;
 
 void setup() {
   size(800, 800);
   player1 = new ArrayList<Piece>();
   player2 = new ArrayList<Piece>();
+  pieces = new ArrayList<Piece>();
   initBoard();
 }
 
@@ -25,16 +29,11 @@ void draw() {
   hover();
   drawBoard();
   drawPieces();
+  drawOverlay();
 }
 
 void drawPieces() {
-  // player1 pieces
-  for (Piece p : player1) {
-    p.update();
-    p.show();
-  }
-  // player2 pieces
-  for (Piece p : player2) {
+  for (Piece p : pieces) {
     p.update();
     p.show();
   }
@@ -42,10 +41,10 @@ void drawPieces() {
 
 void initBoard() {
   // adds pieces to players
-  player1.add(new Piece(1, 3, 3));
-  player1.add(new Piece(1, 4, 4));
-  player2.add(new Piece(2, 3, 4));
-  player2.add(new Piece(2, 4, 3));
+  pieces.add(new Piece(1, 3, 3));
+  pieces.add(new Piece(1, 4, 4));
+  pieces.add(new Piece(2, 3, 4));
+  pieces.add(new Piece(2, 4, 3));
 }
 
 void drawBoard() {
@@ -55,6 +54,17 @@ void drawBoard() {
   for (int col = 0; col < squareCount; col ++) {
     for (int row = 0; row < squareCount; row ++) {
       rect(col*res, row*res, res, res);
+    }
+  }
+}
+
+void drawOverlay() {
+  int col = int(mouseX/res);
+  int row = int(mouseY/res);
+  PVector centre = new PVector((col+0.5)*res, (row + 0.5)*res);
+  for (Piece p : pieces) {
+    if (p.player == activePlayer) {
+      line(p.pos.x, p.pos.y, centre.x, centre.y);
     }
   }
 }
@@ -69,17 +79,26 @@ void hover() {
 
 void mousePressed() {
   if (mouseButton == LEFT) {
+    // locate the mouse in terms of columns and rows
     int col = int(mouseX/res);
     int row = int(mouseY/res);
-    for(Piece p: player1){
-      if(p.isClicked(col, row)){
-        p.animating = true;
+    
+    for(Piece p: pieces){
+      if(p.player == activePlayer){
+        if(p.isClicked(col, row)){
+          p.animating = true;
+        }
       }
     }
-    for(Piece p: player2){
-      if(p.isClicked(col, row)){
-        p.animating = true;
-      }
-    }
+    
+    swapPlayers();
+  }
+}
+
+void swapPlayers(){
+  if(activePlayer == 1){
+    activePlayer = 2;
+  } else {
+    activePlayer = 1;
   }
 }
