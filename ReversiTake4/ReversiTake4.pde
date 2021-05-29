@@ -69,13 +69,17 @@ void hover() {
 
 void mousePressed() {
   if (mouseButton == LEFT) {
-    player1.get(0).animating = true;
-    //int col = int(mouseX/res);
-    //int row = int(mouseY/res);
-    //for(Piece p: player1){
-    //  if(p.isClicked(col, row)){
-    //    p.animating = true;
-    //  }
-    //}
+    int col = int(mouseX/res);
+    int row = int(mouseY/res);
+    for(Piece p: player1){
+      if(p.isClicked(col, row)){
+        p.animating = true;
+      }
+    }
+    for(Piece p: player2){
+      if(p.isClicked(col, row)){
+        p.animating = true;
+      }
+    }
   }
 }
