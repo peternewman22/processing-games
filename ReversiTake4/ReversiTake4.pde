@@ -9,27 +9,40 @@ How does Reversi work?
  
  */
 
-ArrayList<Piece> player1, player2;
 ArrayList<Piece> pieces;
 int squareCount = 8;
+int activeCol, activeRow;
+PVector centre;
 float res = 100;
-boolean isPlayer1Turn = true;
 int activePlayer = 1;
+boolean isValidMove = false;
 
 void setup() {
   size(800, 800);
-  player1 = new ArrayList<Piece>();
-  player2 = new ArrayList<Piece>();
   pieces = new ArrayList<Piece>();
+  centre = new PVector(0,0);
+  locateMouse();
+  
   initBoard();
 }
 
 void draw() {
   background(0);
+  locateMouse();
+  evalMove();
   hover();
   drawBoard();
   drawPieces();
   drawOverlay();
+}
+
+void locateMouse() {
+  activeCol = int(mouseX/res);
+  activeRow = int(mouseY/res);
+  centre.set((activeCol+0.5)*res, (activeRow + 0.5)*res);
+}
+
+void evalMove() {
 }
 
 void drawPieces() {
@@ -59,9 +72,6 @@ void drawBoard() {
 }
 
 void drawOverlay() {
-  int col = int(mouseX/res);
-  int row = int(mouseY/res);
-  PVector centre = new PVector((col+0.5)*res, (row + 0.5)*res);
   for (Piece p : pieces) {
     if (p.player == activePlayer) {
       line(p.pos.x, p.pos.y, centre.x, centre.y);
@@ -71,10 +81,11 @@ void drawOverlay() {
 
 void hover() {
   // detect where the mouse is
-  int col = int(mouseX/res);
-  int row = int(mouseY/res);
-  fill(255, 200);
-  rect(col*res, row*res, res, res);
+  if (isValidMove) {
+  } else {
+    fill(255, 200);
+    rect(activeCol*res, activeRow*res, res, res);
+  }
 }
 
 void mousePressed() {
@@ -82,21 +93,21 @@ void mousePressed() {
     // locate the mouse in terms of columns and rows
     int col = int(mouseX/res);
     int row = int(mouseY/res);
-    
-    for(Piece p: pieces){
-      if(p.player == activePlayer){
-        if(p.isClicked(col, row)){
+
+    for (Piece p : pieces) {
+      if (p.player == activePlayer) {
+        if (p.isClicked(activeCol, activeRow)) {
           p.animating = true;
         }
       }
     }
-    
+
     swapPlayers();
   }
 }
 
-void swapPlayers(){
-  if(activePlayer == 1){
+void swapPlayers() {
+  if (activePlayer == 1) {
     activePlayer = 2;
   } else {
     activePlayer = 1;
