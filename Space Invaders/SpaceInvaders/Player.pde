@@ -1,27 +1,15 @@
-class Player {
-  // Player has an x position, show, fire, powerups
-  //float x;
-  //float y;
-  float size;
+class Player extends Ship {
+  // includes cooldown rates and only the one sprite
   int coolDown;
   int coolDownRate;
-  int bulletRate;
-  boolean iAmDead;
+  PImage sprite;
 
-  PVector pos;
-  PVector vel;
-
-  Player() {
-
-    pos = new PVector(size/2, height - size);
-    //vel = new PVector(0, vely);
-    pos.x = width/2;
-    size = 50;
-    pos.y =  height - size/2;
+  Player(PImage sprite_) {
+    super();
     coolDown = 0;
     coolDownRate = 15;
-    bulletRate = 2;
     iAmDead = false;
+    sprite = sprite_;
   }
 
   void show() {
@@ -30,7 +18,10 @@ class Player {
       fill(255);
       noStroke();
       rect(pos.x, pos.y, size, size);
+      imageMode(CENTER);
+      image(sprite, pos.x, pos.y);
       fill(0);
+      ellipse(pos.x, pos.y, 5, 5);
       // draw in coolDown level
       textAlign(LEFT);
       textSize(20);
@@ -38,41 +29,6 @@ class Player {
       fill(255);
       text(str(coolDown), 20, height-20);
     }
-  }
-
-
-
-  void update(float vel) {
-    // change x pos
-    pos.x += vel;
-    if (pos.x < size/2) {
-      pos.x = size/2;
-    } else if (pos.x + size/2 > width) {
-      pos.x = width - size/2;
-    }
-  }
-
-  boolean iAmHit(float x_, float y_) {
-    if (x_ >= pos.x - size/2 && x_ <= pos.x + size/2 && y_ >= pos.y - size/2 && y_ <= pos.y + size/2 ) {
-      print("Hit detected!");
-      return true;
-    }
-    return false;
-    // could be refactored to return A && B && C && D ?
-  }
-
-  void explode() {
-    println("Showing explosion...");
-    iAmDead = true;
-    stroke(255,0,0);
-    strokeWeight(5);
-    push();
-      translate(pos.x, pos.y);
-      for (int i = 0; i < 12; i++) {
-        rotate(PI/6);
-        line(20, 0, 100, 0);
-      }
-    pop();
   }
 
   void chargeWeapon() {
