@@ -128,6 +128,7 @@ void drawOverlay() {
       line(p.pos.x, p.pos.y, centre.x, centre.y);
     }
   }
+  // making sure the test for the distance to the nearest piece works
   stroke(255);
   strokeWeight(5);
   noFill();
