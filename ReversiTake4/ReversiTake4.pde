@@ -15,7 +15,7 @@ int squareCount = 8;
 int activeCol, activeRow;
 PVector centre;
 float res = 100;
-float diagDist = PVector.dist(new PVector(0,0), new PVector(res, res)); // so it calculates the same
+float diagDist = PVector.dist(new PVector(0, 0), new PVector(res, res)); // so it calculates the same
 int activePlayer = 1;
 boolean isValidMove = false;
 boolean isBlank = false;
@@ -25,9 +25,9 @@ boolean doesBookend = true;
 void setup() {
   size(800, 800);
   pieces = new ArrayList<Piece>();
-  centre = new PVector(0,0);
+  centre = new PVector(0, 0);
   locateMouse();
-  
+
   initBoard();
 }
 
@@ -39,6 +39,16 @@ void draw() {
   drawBoard();
   drawPieces();
   drawOverlay();
+}
+
+boolean isOnLine(PVector piecePos, PVector candidate) {
+  PVector ab = PVector.sub(centre, piecePos);
+  PVector ap = PVector.sub(candidate, piecePos);
+  ab.normalize();
+  ab.mult(ap.dot(ab));
+  PVector projPoint = PVector.add(piecePos, ab);
+  float d = PVector.dist(candidate, projPoint);
+  return d < 5;
 }
 
 void locateMouse() {
@@ -60,31 +70,29 @@ void hover() {
 
 void evalMove() {
   isBlank = true;
-  
+
   // a move is valid if the square is unoccupied
-  for(Piece p: pieces){
-   if(p.doesMatch(activeCol, activeRow)){
-     isBlank = false;
-     return; // no need to check further
-   }
-  }
-  
-  // a move is valid if it's next to an enemy piece
-  for(Piece p: pieces){
-    // if an enemy
-    if(p.player != activePlayer){
-      // pieces should either be res away or sqrt(2)*res away
-      float d = PVector.dist(centre, p.pos);
-      if(d == res || d == diagDist){
-        isEnemyAdjacent = true;
-      }
+  for (Piece p : pieces) {
+    if (p.doesMatch(activeCol, activeRow)) {
+      isBlank = false;
+      return; // no need to check further
     }
   }
-  
+
+  // a move is valid if it's next to an enemy piece
+  for (Piece p : pieces) {
+    // if an enemy
+    if (p.player != activePlayer) {
+      // pieces should less than sqrt(2)*res away
+      float d2e = PVector.dist(centre, p.pos);
+      isEnemyAdjacent = d2e <= diagDist*1.1;
+    }
+  }
+
   // checking for Bookending = points that s
-  
-   
-  // if there are no matches, i.e. we're on a blank square, then see if 
+
+
+  // if there are no matches, i.e. we're on a blank square, then see if
   isValidMove = isBlank && isEnemyAdjacent && doesBookend;
 }
 
@@ -120,6 +128,10 @@ void drawOverlay() {
       line(p.pos.x, p.pos.y, centre.x, centre.y);
     }
   }
+  stroke(255);
+  strokeWeight(5);
+  noFill();
+  ellipse(centre.x, centre.y, 2*diagDist*1.1, 2*diagDist*1.1);
 }
 
 
